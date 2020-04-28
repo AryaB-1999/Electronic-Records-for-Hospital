@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<script>
+	window.history.forward();
+	function noBack() {
+		// window.onbeforeunload = function() { return "Your work will be lost."; };
+		window.history.forward();
+	} 
+</script>
+
+<head>
+
+</head>
+<style>
+	/*set border to the form*/
+
+	/*assign full width inputs*/
+
+	input[type=text],
+	input[type=password] {
+		width: 100%;
+		padding: 12px 20px;
+		margin: 8px 0;
+		display: inline-block;
+		border: 1px solid #ccc;
+		box-sizing: border-box;
+	}
+
+	/*set a style for the buttons*/
+
+	button {
+		background-color: #4CAF50;
+		color: white;
+		border: solid;
+		padding: 1%;
+		border-radius: 0%;
+		cursor: pointer;
+	}
+
+	/* set a hover effect for the button*/
+
+	/*set extra style for the cancel button*/
+
+	/*set padding to the container*/
+
+	.container {
+		padding: 1%;
+		width: 20%;
+		height: initial;
+		overflow-y: hidden;
+	}
+
+	/*set the forgot password text*/
+
+	span.psw {
+		float: right;
+		padding-top: 16px;
+	}
+
+	/*set styles for span and cancel button on small screens*/
+
+	@media screen and (max-width: 300px) {
+		span.psw {
+			display: block;
+			float: none;
+		}
+
+		.cancelbtn {
+			width: 100%;
+		}
+	}
+</style>
+
+<style>
+	body {
+		margin: 0;
+	}
+
+	.icon-bar {
+		width: 100%;
+		background-color: forestgreen;
+		overflow: auto;
+	}
+
+	.icon-bar a {
+		float: left;
+		width: 20%;
+		text-align: center;
+		padding: 12px 0;
+		transition: all 0.3s ease;
+		color: white;
+		font-size: 36px;
+	}
+
+	.icon-bar a:hover {
+		background-color: #000;
+	}
+</style>
+
+<body onload="noBack()">
+
+	<script>
+		function reload() {
+			window.location.href = "http://localhost:8081"
+		}
+
+		function a() {
+			document.getElementById('medDash').hidden = false
+			document.getElementById('medDoc').hidden = true
+		}
+		function b() {
+			document.getElementById('medDash').hidden = true
+			document.getElementById('medDoc').hidden = false
+			App.fillMedDocs()
+		}
+		function showPatHome() {
+			document.getElementById('patDash').hidden = false;
+			document.getElementById('patRecs').hidden = true;
+		}
+		function showPatRecords() {
+			document.getElementById('patDash').hidden = true;
+			document.getElementById('patRecs').hidden = false;
+			App.fillPatRecs();
+		}
+		function c() {
+			document.getElementById('adminLogin').hidden = false
+			document.getElementById('adminInst').hidden = true
+		}
+		function d() {
+			document.getElementById('adminLogin').hidden = true
+			document.getElementById('adminInst').hidden = false
+			App.adminInstPopulate()
+		}
+	</script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<script src='https://code.jquery.com/jquery-3.3.1.slim.min.js'
+		integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo'
+		crossorigin='anonymous'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'
+		integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1'
+		crossorigin='anonymous'></script>
+	<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'
+		integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM'
+		crossorigin='anonymous'></script>
+	<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'
+		integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+	<link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'>
+	<nav class='navbar navbar-default'>
+		<div class='container-fluid'></div>
+
+		<div class="icon-bar">
+			<h1 style="padding-left: 2%;color: white;">TAAR - Revolutionizing Healthcare</h1>
+		</div>
+
+		<!--Step 1 : Adding HTML-->
+		<div id="home" style="width: 100%;">
+			<center>
+				<h1>LOGIN</h1>
+			</center>
+			<input type="text" placeholder="Enter Public Address" name="uname" id="address" required
+				style="width: 45%;align-self: center;margin-left: 5%;">
+			<input type="text" placeholder="Enter ID (if Doctor)" name="loginID" id="loginID"
+				style="width: 25%;align-self: center;margin-left: 2%;">
+			<div id="home" style="width: 100%;margin-left: 5%;">
+				<p><a href="#adminLogin"><button type="submit" onclick="App.loginAdmin()" style="width: 200px;">Login
+							Admin</button></a></p>
+				<p><a href="#medicalInstituteLogin"><button type="submit" onclick="App.loginMedicalInstitute()"
+							style="width: 200px;">Login Medical Institute</button></a></p>
+				<p><a href="#patientLogin"><button type="submit" onclick="App.loginPatient()" style="width: 200px">Login
+							Patient</button></a></p>
+				<p><a href="#doctorLogin"><button type="submit" onclick="App.loginDoctor()" style="width: 200px">Login
+							Doctor</button></a></p>
+			</div>
+		</div>
+
+		<!--Medical Institute Login Page-->
+
+		<div id="medicalInstituteLogin" style="width: 100%;" hidden>
+			<div class="container">
+				<div class="w3-bar w3-border w3-light-grey">
+					<a class="w3-bar-item w3-button" onclick="a()">Home</a>
+					<a class="w3-bar-item w3-button" onclick="b()">Doctors</a>
+					<a class="w3-bar-item w3-button" style="float: right;" onclick="reload()">Logout</a>
+				</div>
+				<div id="medDash">
+					<h1 id="medName">Hello, </h1>
+					<table class='w3-table w3-striped' style='padding:0px'>
+						<tr>
+							<td>Institute ID</td>
+							<td id="Mresult0"></td>
+						</tr>
+						<tr>
+							<td>Institute Name</td>
+							<td id="Mresult1"></td>
+						</tr>
+						<tr>
+							<td>My Address </td>
+							<td id="MaddressVal"></td>
+						</tr>
+						<tr>
+							<td>Consensus Address</td>
+							<td id="Mresult2"></td>
+						</tr>
+					</table>
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="document.getElementById('registerDoc').style.display='block'">Register
+						Doctor</button>
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="document.getElementById('registerPat').style.display='block'">Register Patient</button>
+					<button class='w3-button w3-light-grey' style='margin:2%;padding-left: 1%;' type='submit'
+						onclick='App.updateLastModified()'>Update
+						Last Modified</button>
+				</div>
+			</div>
+			<div id="medDoc" class="container">
+				<table id="medDocInfo" class="w3-table w3-bordered">
+				</table>
+			</div>
+		</div>
+
+
+		<!--Patient Login-->
+
+		<div id="patientLogin" style="width: 100%;" hidden>
+			<div class="container">
+				<div class="w3-bar w3-border w3-light-grey">
+					<a class="w3-bar-item w3-button" onclick="showPatHome()">Home</a>
+					<a class="w3-bar-item w3-button" onclick="showPatRecords()">Records</a>
+					<a class="w3-bar-item w3-button" style="float: right;" onclick="reload()">Logout</a>
+				</div>
+				<div id="patDash">
+					<h1 id="patName">Hello, </h1>
+					<h3>Personal Info</h3>
+					<table class='w3-table w3-bordered' style='padding:0px'>
+						<tr>
+							<td>Name</td>
+							<td id="Pname"></td>
+						</tr>
+						<tr>
+							<td>Id Proof</td>
+							<td id="PId"></td>
+						</tr>
+						<tr>
+							<td>Address</td>
+							<td id="PAddr"></td>
+						</tr>
+						<tr>
+							<td>Age (in Years)</td>
+							<td id="PA"></td>
+						</tr>
+						<tr>
+							<td>Weight (in Years)</td>
+							<td id="PW"></td>
+						</tr>
+						<tr>
+							<td>Height (in Years)</td>
+							<td id="PH"></td>
+						</tr>
+						<tr>
+							<td>My Contract Address</td>
+							<td id="PConAddr"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div id="patRecs" class="container" hidden>
+				<table id='patRecsTable' class='w3-table w3-striped'>
+				</table>
+			</div>
+		</div>
+
+		<!--Admin Login-->
+		<div id="adminLogin" style="width: 100%;" hidden>
+			<div class="container">
+				<div class="w3-bar w3-border w3-light-grey">
+					<a class="w3-bar-item w3-button" onclick="c()">Home</a>
+					<a class="w3-bar-item w3-button" onclick="d()">Medical Institutes</a>
+					<a class="w3-bar-item w3-button" style="float: right;" onclick="reload()">Logout</a>
+				</div>
+				<h1 id="adminName">Hello, Admin</h1>
+				<table class='w3-table w3-striped' style='padding:0px'>
+					<tr>
+						<td>My Address</td>
+						<td id="adminAddress"></td>
+					</tr>
+				</table>
+				<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+					onclick="document.getElementById('registerMed').style.display='block'">Register
+					Medical Institute</button>
+			</div>
+		</div>
+
+		<div id='adminInst' style="width: 100%;" hidden>
+			<div class="container">
+				<div class="w3-bar w3-border w3-light-grey">
+					<a class="w3-bar-item w3-button" onclick="c()">Home</a>
+					<a class="w3-bar-item w3-button" onclick="d()">Medical Institutes</a>
+					<a class="w3-bar-item w3-button" style="float: right;" onclick="reload()">Logout</a>
+				</div>
+				<table id="adminInstTable" class='w3-table w3-bordered' style='padding:0px'>
+				</table>
+			</div>
+		</div>
+
+
+		<!--Doctor Login-->
+		<div id="doctorLogin" style="width: 100%;" hidden>
+			<div class="container">
+				<div class="w3-bar w3-border w3-light-grey">
+					<a href="#" class="w3-bar-item w3-button">Home</a>
+					<a href="#" class="w3-bar-item w3-button" style="float: right;" onclick="reload()">Logout</a>
+				</div>
+				<h1 id="HDocName">Hello, </h1>
+				<table class='w3-table w3-striped' style='padding:0px'>
+					<tr>
+						<td>Name</td>
+						<td id="docName"></td>
+					</tr>
+					<tr>
+						<td>Medical Institute Address</td>
+						<td id="docMedIns"></td>
+					</tr>
+					<tr>
+						<td>ID</td>
+						<td id="docID"></td>
+					</tr>
+					<tr>
+						<td>Specialization</td>
+						<td id="docSpec"></td>
+					</tr>
+				</table>
+				<button class='w3-button w3-light-grey' style='margin-top:20px' type='submit'
+					onclick="document.getElementById('createEHR').style.display='block'">Create New EHR</button>
+				<button class='w3-button w3-light-grey' style='margin-top:20px;margin-left: 10px;' type='submit'
+					onclick="document.getElementById('fetchEHR').style.display='block'">Fetch an Existing EHR</button>
+			</div>
+		</div>
+
+		<!--Medical Institute Registration Modal-->
+
+		<div id="registerMed" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('registerMed').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Register Medical Institute</h2>
+				</header>
+
+				<div class="w3-container">
+					<br />
+					<table class='w3-table'>
+						<tr>
+							<td><input class="w3-input" type="text" id="regMedName" required>
+								<label>Medical Institute Name</label></td>
+						</tr>
+					</table>
+				</div>
+
+				<footer class="w3-container w3-light-grey">
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="App.registerMedWithDet()">Register</button>
+				</footer>
+
+			</div>
+		</div>
+
+
+		<!--Doctor Registration Modal-->
+
+		<div id="registerDoc" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('registerDoc').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Register Doctor</h2>
+				</header>
+
+				<div class="w3-container">
+					<br />
+					<table class='w3-table'>
+						<tr>
+							<td><input class="w3-input" type="text" id="regDocName" required>
+								<label>Doctor Name</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" id="regDocSpec" required>
+								<label>Doctor Specialization</label></td>
+						</tr>
+					</table>
+				</div>
+
+				<footer class="w3-container w3-light-grey">
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="App.registerDoc()">Register</button>
+				</footer>
+
+			</div>
+		</div>
+
+		<!--Patient Registration Modal-->
+
+		<div id="registerPat" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('registerPat').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Register Patient</h2>
+				</header>
+
+				<div class="w3-container">
+					<br />
+					<table class='w3-table'>
+						<tr>
+							<td><input class="w3-input" type="text" id="regPatName" required>
+								<label>Patient Name</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" id="regPatID" required>
+								<label>Patient ID Proof</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" id="regPatAddr" required>
+								<label>Patient Residential Address</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" id="regPatA" required>
+								<label>Patient Age in yrs</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" id="regPatH" required>
+								<label>Patient Height in cms</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" id="regPatW" required>
+								<label>Patient Weight in kgs</label></td>
+						</tr>
+					</table>
+				</div>
+
+				<footer class="w3-container w3-light-grey">
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="App.registerPat()">Register</button>
+				</footer>
+
+			</div>
+		</div>
+
+		<!--EHR Creation Modal-->
+
+		<div id="createEHR" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('createEHR').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Create a New Record</h2>
+				</header>
+
+				<div class="w3-container">
+					<br />
+					<table class='w3-table'>
+						<tr>
+							<td><input class="w3-input" type="text" id="crEHRPatAddr" required>
+								<label>Patient Address</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="file" id="crEHRFile" required>
+								<label>Upload File</label></td>
+						</tr>
+					</table>
+				</div>
+
+				<footer class="w3-container w3-light-grey">
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="App.createEHR()">Register</button>
+				</footer>
+
+			</div>
+		</div>
+
+		<!--Fetch EHR Modal-->
+
+		<div id="fetchEHR" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('fetchEHR').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Fetch a Record</h2>
+				</header>
+
+				<div class="w3-container">
+					<br />
+					<table class='w3-table'>
+						<tr>
+							<td><input class="w3-input" type="text" id="reqEHRAddr" required>
+								<label>Patient Address</label></td>
+						</tr>
+						<tr>
+							<td><input class="w3-input" type="text" placeholder="Numbers only" id="reqEHRID" required>
+								<label>EHR ID</label></td>
+						</tr>
+					</table>
+				</div>
+
+				<footer class="w3-container w3-light-grey">
+					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+						onclick="App.requestEHR()">Find</button>
+				</footer>
+			</div>
+		</div>
+
+		<!--Show EHR Modal-->
+
+		<div id="showEHR" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('showEHR').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>TAAR - Revolutionizing Healthcare</h2>
+				</header>
+
+				<div class="container" style="width: max-content;">
+					<iframe id="iframeEHR" height=700px width=850px></iframe>
+
+
+				</div>
+			</div>
+		</div>
+
+		<!--Verify Modal-->
+
+		<div id="showValidate" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('showValidate').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Validate</h2>
+				</header>
+
+				<div class="container" style="width: max-content;">
+					<input class="w3-input" type="text" id="otp" placeholder="Numbers only" required>
+					<label>Enter OTP</label>
+
+					<footer class="w3-container w3-light-grey">
+						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+							onclick="App.verifyOTP()">Verify</button>
+					</footer>
+
+				</div>
+			</div>
+		</div>
+
+		<!--Manage Permissions Modal-->
+
+		<div id="managePerm" class="w3-modal">
+			<div class="w3-modal-content">
+
+				<header class="w3-container w3-green">
+					<span onclick="document.getElementById('managePerm').style.display='none'"
+						class="w3-button w3-display-topright">&times;</span>
+					<h2>Manage Permissions</h2>
+				</header>
+
+				<div class="container" style="width: max-content;">
+					<table id="managePermTable" class="w3-table w3-bordered">
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+
+</body>
+
+</html>

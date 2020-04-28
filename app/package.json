@@ -1,0 +1,31 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack-dev-server"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.0.5",
+    "html-webpack-plugin": "^4.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "aegir": "^21.9.0",
+    "bl": "^4.0.2",
+    "cors": "^2.8.5",
+    "file-saver": "^2.0.2",
+    "fs": "0.0.1-security",
+    "interface-ipfs-core": "^0.134.0",
+    "ipfs": "^0.43.0",
+    "ipfs-api": "^26.1.2",
+    "ipfs-http-client": "^44.0.0",
+    "twilio": "^3.42.2",
+    "unfetch": "^4.1.0",
+    "web3": "^1.2.4"
+  }
+}
