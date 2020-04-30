@@ -6,7 +6,7 @@ module.exports = function(deployer, network, accounts) {
     deployer.then(async() => {
         await deployer.deploy(consensus);
         await deployer.deploy(MedicalInstitute, consensus.address, "Hospital 1");
-        await deployer.deploy(Patient, "A", "A", "A", 20,20,20);
+        await deployer.deploy(Patient, "A", "A", "A", 20,20,20, "8055654418", "arya.bhivpathaki@gmail.com");
     })
     
 }     

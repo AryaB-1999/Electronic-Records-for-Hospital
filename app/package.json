@@ -15,6 +15,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.1.0",
     "aegir": "^21.9.0",
     "bl": "^4.0.2",
     "cors": "^2.8.5",

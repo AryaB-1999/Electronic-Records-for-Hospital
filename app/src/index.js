@@ -3,11 +3,12 @@ import Consensus from '../../build/contracts/Consensus.json'
 import MedicalInstitute from '../../build/contracts/MedicalInstitute.json'
 import Patient from '../../build/contracts/Patient.json'
 import ipfs from 'ipfs-http-client'
-import Login from "./login"
 import contract from "truffle-contract"
-import twilio from 'twilio'
+import sendgrid from '@sendgrid/mail'
+import cors from 'cors'
 
 var initF = false;
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const App = {
   ipfshash: null,
@@ -105,6 +106,8 @@ const App = {
       document.getElementById("PH").innerHTML = result[5]
       document.getElementById("PConAddr").innerHTML = this.loginAddress
       document.getElementById("patName").innerHTML += result[0]
+      document.getElementById("PMob").innerHTML = result[6]
+      document.getElementById("PMail").innerHTML = result[7]
     }
     catch (err) {
       alert("Login Address Incorrect!!")
@@ -171,19 +174,19 @@ const App = {
       this.loginAddress = addrVal
       this.medi = new web3.eth.Contract(MedicalInstitute.abi, this.loginAddress)
       const result = await this.medi.methods.getDetailsOfDoctor(doctID).call()
-      if(result[0] == "") {
+      if (result[0] == "") {
         console.log("IN")
         alert("Incorrect Doctor ID for Medical Institute")
         return;
       }
-      else if(!this.medi.methods.isActive().call()) {
+      else if (!this.medi.methods.isActive().call()) {
         alert("Medical Institute has been blocked by Admin")
         return;
       }
       else {
         this.doc = doctID
         const a = await this.medi.methods.checkValidityOfDoctor(this.doc).call()
-        if(!a) {
+        if (!a) {
           alert("You have been blocked by Medical Institute")
           return;
         }
@@ -252,11 +255,13 @@ const App = {
       const patAge = parseInt(document.getElementById("regPatA").value)
       const patHeight = parseInt(document.getElementById("regPatH").value)
       const patWeight = parseInt(document.getElementById("regPatW").value)
+      const mob = document.getElementById("regPatMob").value;
+      const mail = document.getElementById("regPatMail").value;
       const patient = contract(Patient)
       const netID = await web3.eth.net.getId()
       patient.setProvider(this.web3.currentProvider)
       patient.setNetwork(netID)
-      const patientInstance = await patient.new(patName, patID, patAddr, patAge, patHeight, patWeight, { from: this.account })
+      const patientInstance = await patient.new(patName, patID, patAddr, patAge, patHeight, patWeight, mob, mail, { from: this.account })
       alert(patName + " has been registered, address of patient is : " + patientInstance.address)
       console.log(patientInstance.address)
     }
@@ -277,8 +282,8 @@ const App = {
     for (var i = 1; i < res; i++) {
       buf = await this.medi.methods.getDetailsOfDoctor(i).call()
       flag = await this.medi.methods.checkValidityOfDoctor(i).call()
-      if(flag)
-      docTable.innerHTML += "<tr><td>" + i + "</td>" + "<td>" + buf[0] + "</td>" + "<td>" + buf[1] + "</td><td><button class='w3-button w3-light-grey' onclick='App.deactivateDoc(" + i + ")'>Delete</button></td><tr>"
+      if (flag)
+        docTable.innerHTML += "<tr><td>" + i + "</td>" + "<td>" + buf[0] + "</td>" + "<td>" + buf[1] + "</td><td><button class='w3-button w3-light-grey' onclick='App.deactivateDoc(" + i + ")'>Delete</button></td><tr>"
     }
     console.log(res);
   },
@@ -322,17 +327,17 @@ const App = {
     patRecs.innerHTML = "<tr><td>ID#</td><td>Hash Value</td><td>Created by Doctor</td><td></td></tr>"
     for (; i >= 0; i--) {
       res = await p.methods.fetchDetailsOfEHR(i).call()
-      if(res[0] != "") {
+      if (res[0] != "") {
         console.log("Perm : " + res[3])
         console.log("Result" + res)
         console.log("Resultant record : " + res[3])
         const manageButton = "<td><button id = IPFSManage" + i + " class='w3-button w3-light-grey' onclick='App.manageIPFSFile(" + i + ")'>Manage</button></td>"
         const deleteButton = "<td><button id = IPFSDel" + i + " class='w3-button w3-light-grey' onclick='App.deleteIPFSFile(" + i + ")'>Delete</button></td>"
         const fetchButton = "<td><button id = IPFSPat" + i + " class='w3-button w3-light-grey' onclick='App.fetchIPFSFile(" + i + ")'>Fetch</button></td>"
-        patRecs.innerHTML += "<tr><td>" + i + "<td>" + res[0] + "</td><td>" + res[1] + "</td>" +fetchButton + manageButton  + deleteButton +"</tr>"
+        patRecs.innerHTML += "<tr><td>" + i + "<td>" + res[0] + "</td><td>" + res[1] + "</td>" + fetchButton + manageButton + deleteButton + "</tr>"
       }
       else {
-        
+
       }
     }
   },
@@ -344,7 +349,7 @@ const App = {
     console.log(await ipfsInstance.version())
     const p = new this.web3.eth.Contract(Patient.abi, this.loginAddress)
     let res = await p.methods.fetchDetailsOfEHR(arg).call()
-    if(res[0] == "") {
+    if (res[0] == "") {
       alert("EHR is deleted or does not exist")
     }
     else {
@@ -353,7 +358,7 @@ const App = {
       var file1;
       // for await (const file of ipfsInstance.get(res[0])) {
       //   console.log(file.path)
-  
+
       //   const content = new BufferList()
       //   for await (const chunk of file.content) {
       //     content.append(chunk)
@@ -365,10 +370,10 @@ const App = {
       // const file2 = new Blob([file1], {type:'pdf'})
       // console.log(file2)
       // FileSaver.saveAs(file2,"Sample.pdf")
-  
+
       var url = "http://ipfs.io/ipfs/" + res[0]
       console.log(url)
-  
+
       document.getElementById('iframeEHR').src = "http://localhost:8080/ipfs/" + res[0]
       document.getElementById('showEHR').style.display = 'block'
     }
@@ -386,13 +391,13 @@ const App = {
     console.log(res)
     if (res) {
       let result = await p.methods.fetchDetailsOfEHR(EHRId).call()
-      if(result[0] == "") {
+      if (result[0] == "") {
         alert("EHR does not exist or is deleted")
         return;
       } else {
         var url = "http://ipfs.io/ipfs/" + result[0]
         console.log(url)
-  
+
         document.getElementById('iframeEHR').src = "http://localhost:8080/ipfs/" + result[0]
         document.getElementById('showEHR').style.display = 'block'
       }
@@ -400,8 +405,26 @@ const App = {
     else {
       // var client = new twilio('AC156faa4751108703f162eece68f2953a', '584a07eb4434e9af6849addf24b819c8')
       const validateVar = await p.methods.verifyDoctor().call()
+      const res = await p.methods.fetchDetailsOfPatient().call()
+      const pMail = res[7]
       console.log(validateVar)
       this.otp = validateVar
+      const message = {
+        to: pMail,
+        method: "POST",
+        from: 'arya.bhivpathaki18@vit.edu',
+        subject: 'OTP for verification',
+        text: 'Your OTP for verification is : ' + this.otp
+      };
+      // sendgrid
+      //   .send(message)
+      //   .then(() => { }, error => {
+      //     console.error(error);
+
+      //     if (error.response) {
+      //       console.error(error.response.body)
+      //     }
+      //   });
       // client.messages.create({
       //   to: '+918055654418',
       //   from: '+19382533225',
@@ -489,18 +512,18 @@ const App = {
   },
   deactivateDoc: async function (i) {
     var conf = confirm("Proceed with deleting doctor?")
-    if(conf) {
-      await this.medi.methods.revokeDoctor(i).send({from: this.account})
+    if (conf) {
+      await this.medi.methods.revokeDoctor(i).send({ from: this.account })
       this.fillMedDocs();
     }
   },
-  deleteIPFSFile: async function(arg) {
+  deleteIPFSFile: async function (arg) {
     console.log("In delete")
     const p = new this.web3.eth.Contract(Patient.abi, this.loginAddress)
     let res = await p.methods.fetchPermissionedDoctorOfEHR(arg).call()
     var conf = confirm("Are you sure you want to delete this file, it cannot be recovered again?")
-    if(conf) {
-      await p.methods.removeEHR(arg).send({from: this.account})
+    if (conf) {
+      await p.methods.removeEHR(arg).send({ from: this.account })
     }
     this.fillPatRecs();
   }
@@ -512,6 +535,7 @@ window.addEventListener('load', function () {
   if (window.ethereum) {
     // use MetaMask's provider
     App.web3 = new Web3(window.ethereum)
+    App.use(cors({ origin: "*" }))
     window.ethereum.enable() // get permission to access accounts
   } else {
     console.warn(

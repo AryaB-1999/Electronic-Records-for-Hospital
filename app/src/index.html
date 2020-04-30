@@ -263,6 +263,14 @@
 							<td>My Contract Address</td>
 							<td id="PConAddr"></td>
 						</tr>
+						<tr>
+							<td>Contact Number</td>
+							<td id="PMob"></td>
+						</tr>
+						<tr>
+							<td>Mail</td>
+							<td id="PMail"></td>
+						</tr>
 					</table>
 				</div>
 			</div>
@@ -349,21 +357,23 @@
 						class="w3-button w3-display-topright">&times;</span>
 					<h2>Register Medical Institute</h2>
 				</header>
+				<form>
 
-				<div class="w3-container">
-					<br />
-					<table class='w3-table'>
-						<tr>
-							<td><input class="w3-input" type="text" id="regMedName" required>
-								<label>Medical Institute Name</label></td>
-						</tr>
-					</table>
-				</div>
+					<div class="w3-container">
+						<br />
+						<table class='w3-table'>
+							<tr>
+								<td><input class="w3-input" type="text" id="regMedName" required>
+									<label>Medical Institute Name</label></td>
+							</tr>
+						</table>
+					</div>
 
-				<footer class="w3-container w3-light-grey">
-					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
-						onclick="App.registerMedWithDet()">Register</button>
-				</footer>
+					<footer class="w3-container w3-light-grey">
+						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+							onclick="App.registerMedWithDet()">Register</button>
+					</footer>
+				</form>
 
 			</div>
 		</div>
@@ -379,25 +389,27 @@
 						class="w3-button w3-display-topright">&times;</span>
 					<h2>Register Doctor</h2>
 				</header>
+				<form>
 
-				<div class="w3-container">
-					<br />
-					<table class='w3-table'>
-						<tr>
-							<td><input class="w3-input" type="text" id="regDocName" required>
-								<label>Doctor Name</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" id="regDocSpec" required>
-								<label>Doctor Specialization</label></td>
-						</tr>
-					</table>
-				</div>
+					<div class="w3-container">
+						<br />
+						<table class='w3-table'>
+							<tr>
+								<td><input class="w3-input" type="text" id="regDocName" required>
+									<label>Doctor Name</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regDocSpec" required>
+									<label>Doctor Specialization</label></td>
+							</tr>
+						</table>
+					</div>
 
-				<footer class="w3-container w3-light-grey">
-					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
-						onclick="App.registerDoc()">Register</button>
-				</footer>
+					<footer class="w3-container w3-light-grey">
+						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+							onclick="App.registerDoc()">Register</button>
+					</footer>
+				</form>
 
 			</div>
 		</div>
@@ -412,42 +424,51 @@
 						class="w3-button w3-display-topright">&times;</span>
 					<h2>Register Patient</h2>
 				</header>
+				<form>
 
-				<div class="w3-container">
-					<br />
-					<table class='w3-table'>
-						<tr>
-							<td><input class="w3-input" type="text" id="regPatName" required>
-								<label>Patient Name</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" id="regPatID" required>
-								<label>Patient ID Proof</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" id="regPatAddr" required>
-								<label>Patient Residential Address</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" id="regPatA" required>
-								<label>Patient Age in yrs</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" id="regPatH" required>
-								<label>Patient Height in cms</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" id="regPatW" required>
-								<label>Patient Weight in kgs</label></td>
-						</tr>
-					</table>
-				</div>
+					<div class="w3-container">
+						<br />
+						<table class='w3-table'>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatName" required>
+									<label>Patient Name</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatID" required>
+									<label>Patient ID Proof</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatAddr" required>
+									<label>Patient Residential Address</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatA" required>
+									<label>Patient Age in yrs</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatH" required>
+									<label>Patient Height in cms</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatW" required>
+									<label>Patient Weight in kgs</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatMob" required>
+									<label>Patient Mobile Number</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" id="regPatMail" required>
+									<label>Patient Email Address</label></td>
+							</tr>
+						</table>
+					</div>
 
-				<footer class="w3-container w3-light-grey">
-					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
-						onclick="App.registerPat()">Register</button>
-				</footer>
-
+					<footer class="w3-container w3-light-grey">
+						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+							onclick="App.registerPat()">Register</button>
+					</footer>
+				</form>
 			</div>
 		</div>
 
@@ -461,25 +482,27 @@
 						class="w3-button w3-display-topright">&times;</span>
 					<h2>Create a New Record</h2>
 				</header>
+				<form>
 
-				<div class="w3-container">
-					<br />
-					<table class='w3-table'>
-						<tr>
-							<td><input class="w3-input" type="text" id="crEHRPatAddr" required>
-								<label>Patient Address</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="file" id="crEHRFile" required>
-								<label>Upload File</label></td>
-						</tr>
-					</table>
-				</div>
+					<div class="w3-container">
+						<br />
+						<table class='w3-table'>
+							<tr>
+								<td><input class="w3-input" type="text" id="crEHRPatAddr" required>
+									<label>Patient Address</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="file" id="crEHRFile" required>
+									<label>Upload File</label></td>
+							</tr>
+						</table>
+					</div>
 
-				<footer class="w3-container w3-light-grey">
-					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
-						onclick="App.createEHR()">Register</button>
-				</footer>
+					<footer class="w3-container w3-light-grey">
+						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+							onclick="App.createEHR()">Register</button>
+					</footer>
+				</form>
 
 			</div>
 		</div>
@@ -494,25 +517,28 @@
 						class="w3-button w3-display-topright">&times;</span>
 					<h2>Fetch a Record</h2>
 				</header>
+				<form>
 
-				<div class="w3-container">
-					<br />
-					<table class='w3-table'>
-						<tr>
-							<td><input class="w3-input" type="text" id="reqEHRAddr" required>
-								<label>Patient Address</label></td>
-						</tr>
-						<tr>
-							<td><input class="w3-input" type="text" placeholder="Numbers only" id="reqEHRID" required>
-								<label>EHR ID</label></td>
-						</tr>
-					</table>
-				</div>
+					<div class="w3-container">
+						<br />
+						<table class='w3-table'>
+							<tr>
+								<td><input class="w3-input" type="text" id="reqEHRAddr" required>
+									<label>Patient Address</label></td>
+							</tr>
+							<tr>
+								<td><input class="w3-input" type="text" placeholder="Numbers only" id="reqEHRID"
+										required>
+									<label>EHR ID</label></td>
+							</tr>
+						</table>
+					</div>
 
-				<footer class="w3-container w3-light-grey">
-					<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
-						onclick="App.requestEHR()">Find</button>
-				</footer>
+					<footer class="w3-container w3-light-grey">
+						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+							onclick="App.requestEHR()">Find</button>
+					</footer>
+				</form>
 			</div>
 		</div>
 
@@ -545,18 +571,20 @@
 						class="w3-button w3-display-topright">&times;</span>
 					<h2>Validate</h2>
 				</header>
+				<form>
 
-				<div class="container" style="width: max-content;">
-					<input class="w3-input" type="text" id="otp" placeholder="Numbers only" required>
-					<label>Enter OTP</label>
+					<div class="container" style="width: max-content;">
+						<input class="w3-input" type="text" id="otp" placeholder="Numbers only" required>
+						<label>Enter OTP</label>
 
-					<footer class="w3-container w3-light-grey">
-						<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
-							onclick="App.verifyOTP()">Verify</button>
-					</footer>
+						<footer class="w3-container w3-light-grey">
+							<button class='w3-button w3-light-grey' style='margin:10px' type='submit'
+								onclick="App.verifyOTP()">Verify</button>
+						</footer>
+				</form>
 
-				</div>
 			</div>
+		</div>
 		</div>
 
 		<!--Manage Permissions Modal-->

@@ -14,6 +14,8 @@ contract Patient {
     address public publicAddress;
     uint256 public noOfRecords = 0;
     uint256 public typeOfRec = 0;
+    string public mobileNumber;
+    string public emailAddress;
 
     // Store structure of EHR as a mapping
 
@@ -35,7 +37,9 @@ contract Patient {
         string memory addrProof,
         uint256 a,
         uint256 h,
-        uint256 w
+        uint256 w,
+        string memory mob,
+        string memory email
     ) public {
         name = n;
         identificationProof = idProof;
@@ -43,6 +47,8 @@ contract Patient {
         age = a;
         heightInCms = h;
         weightInKgs = w;
+        mobileNumber = mob;
+        emailAddress = email;
         publicAddress = address(this);
     }
 
@@ -113,7 +119,9 @@ contract Patient {
             string memory,
             uint256,
             uint256,
-            uint256
+            uint256,
+            string memory,
+            string memory
         )
     {
         return (
@@ -122,7 +130,9 @@ contract Patient {
             addressProof,
             age,
             heightInCms,
-            weightInKgs
+            weightInKgs,
+            mobileNumber,
+            emailAddress
         );
     }
 
