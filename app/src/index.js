@@ -319,15 +319,15 @@ const App = {
     console.log("record Count : " + i)
     i--;
     let res;
-    patRecs.innerHTML = "<tr><td>ID#</td><td>Hash Value</td><td>Created by Doctor</td><td>Last Accessed by Doctor ID</td><td></td></tr>"
+    patRecs.innerHTML = "<tr><td>ID#</td><td>Hash Value</td><td>Created by Doctor</td><td></td></tr>"
     for (; i >= 0; i--) {
       res = await p.methods.fetchDetailsOfEHR(i).call()
       console.log("Result" + res)
       console.log("Resultant record : " + res[3])
       const manageButton = "<td><button id = IPFSManage" + i + " class='w3-button w3-light-grey' onclick='App.manageIPFSFile(" + i + ")'>Manage</button></td>"
-      const deleteButton = "<td><button id = IPFSDel" + i + " class='w3-button w3-light-grey' onclick='App.deleteIPFSFile(" + i + ")'>Delete</button></td>"
+      // const deleteButton = "<td><button id = IPFSDel" + i + " class='w3-button w3-light-grey' onclick='App.deleteIPFSFile(" + i + ")'>Delete</button></td>"
       const fetchButton = "<td><button id = IPFSPat" + i + " class='w3-button w3-light-grey' onclick='App.fetchIPFSFile(" + i + ")'>Fetch</button></td>"
-      patRecs.innerHTML += "<tr><td>" + i + "<td>" + res[0] + "</td><td>" + res[1] + "</td><td>" + res[3] + "</td>" + fetchButton + manageButton + deleteButton + "</tr>"
+      patRecs.innerHTML += "<tr><td>" + i + "<td>" + res[0] + "</td><td>" + res[1] + "</td>" + fetchButton + manageButton  + "</tr>"
     }
   },
 
@@ -410,9 +410,9 @@ const App = {
   },
   manageIPFSFile: async function (arg) {
     const p = new this.web3.eth.Contract(Patient.abi, this.loginAddress)
-    let res = await p.methods.fetchDetailsOfEHR(arg).call()
-    let perm = res[3];
-    console.log(perm)
+    let res = await p.methods.fetchPermissionedDoctorOfEHR(arg).call()
+    let perm = res[0];
+    console.log(res, perm, perm[1])
     const table = document.getElementById('managePermTable')
 
     if (perm == 0) {
@@ -421,7 +421,7 @@ const App = {
       table.innerHTML = "<tr><td>Doctor ID</td><td></td>";
       for (var i = 0; i < perm.length; i++) {
         if (perm[i] != 0) {
-          table.innerHTML += "<tr><td>" + perm[i] + "</td><td><button id = rem" + i + " class='w3-button w3-light-grey' onclick='App.removePerm(" + i + "," + perm[i] + ")'>Revoke</button></td><tr/>"
+          table.innerHTML += "<tr><td>" + perm[i] + "</td><td><button id = rem" + i + " class='w3-button w3-light-grey' onclick='App.removePerm(" + arg + "," + perm[i] + ")'>Revoke</button></td><tr/>"
         }
       }
     }
@@ -446,7 +446,7 @@ const App = {
     var date, res;
     for (var i = 0; i < noOfInst; i++) {
       res = await c.methods.getAllInstitutes(i).call()
-      if (res[1]) {
+      if (res[0]) {
         date = new Date((res[3] * 1000)).toString()
         console.log(date)
         instTable.innerHTML += "<tr><td>" + res[0] + "</td><td>" + res[2] + "</td><td>" + date + "</td><td><button class='w3-button w3-light-grey' onclick='App.deactivateMI(" + i + ")'>Delete</button></td></tr>"

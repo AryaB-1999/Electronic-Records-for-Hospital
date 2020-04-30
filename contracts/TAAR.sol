@@ -21,7 +21,8 @@ contract Patient {
         string fileLocation;
         uint256 byDoctorID;
         uint256 count;
-        uint256 permissionedDoctors;
+        uint256[] permissionedDoctors;
+        // uint256 permissionedDoctors;
     }
 
     mapping(uint256 => EHR) public healthRecords;
@@ -68,8 +69,14 @@ contract Patient {
         view
         returns (bool ans)
     {
-        if (doctorID == healthRecords[id].permissionedDoctors) {
-            return true;
+        for (
+            uint256 i = 0;
+            i < healthRecords[id].permissionedDoctors.length;
+            i++
+        ) {
+            if (healthRecords[id].permissionedDoctors[i] == doctorID) {
+                return true;
+            }
         }
         return false;
     }
@@ -91,7 +98,7 @@ contract Patient {
     {
         healthRecords[noOfRecords].byDoctorID = doctorID;
         healthRecords[noOfRecords].count = 0;
-        healthRecords[noOfRecords].permissionedDoctors = doctorID;
+        healthRecords[noOfRecords].permissionedDoctors.push(doctorID);
         healthRecords[noOfRecords++].fileLocation = fileLocation;
     }
 
@@ -124,20 +131,39 @@ contract Patient {
     function fetchDetailsOfEHR(uint256 ID)
         public
         view
-        returns (string memory, uint256, uint256, uint256)
+        returns (string memory, uint256, uint256)
     {
         return (
             healthRecords[ID].fileLocation,
             healthRecords[ID].byDoctorID,
-            healthRecords[ID].count,
-            healthRecords[ID].permissionedDoctors
+            healthRecords[ID].count
         );
+    }
+
+    // Fetching doctor of EHR given ID of EHR
+
+    function fetchPermissionedDoctorOfEHR(uint256 ID)
+        public
+        view
+        returns (uint256[] memory, uint256)
+    {
+        uint256[] memory doctors = new uint256[](
+            healthRecords[ID].permissionedDoctors.length
+        );
+        for (
+            uint256 i = 0;
+            i < healthRecords[ID].permissionedDoctors.length;
+            i++
+        ) {
+            doctors[i] = healthRecords[ID].permissionedDoctors[i];
+        }
+        return (doctors, ID);
     }
 
     // Add new doctor in permission field
 
     function addDoctorToEHR(uint256 doctorID, uint256 EHRID) public {
-        healthRecords[EHRID].permissionedDoctors = doctorID;
+        healthRecords[EHRID].permissionedDoctors.push(doctorID);
         healthRecords[EHRID].count++;
     }
 
@@ -151,19 +177,32 @@ contract Patient {
 
     function revokePermissionOfDoctorOnEHR(uint256 EHRId, uint256 doctorID)
         public
+        returns (bool)
     {
-        if (healthRecords[EHRId].permissionedDoctors == doctorID) {
-            healthRecords[EHRId].permissionedDoctors = 0;
+        // healthRecords[EHRId].permissionedDoctors[doctorID] = 0;
+
+        for (
+            uint256 i = 0;
+            i < healthRecords[EHRId].permissionedDoctors.length;
+            i++
+        ) {
+            if (healthRecords[EHRId].permissionedDoctors[i] == doctorID) {
+                healthRecords[EHRId].permissionedDoctors[i] = 0;
+                /* if (i < healthRecords[EHRId].permissionedDoctors.length - 1) {
+                    healthRecords[EHRId]
+                        .permissionedDoctors[i] = healthRecords[EHRId]
+                        .permissionedDoctors[healthRecords[EHRId]
+                        .permissionedDoctors
+                        .length - 1];
+                } else {
+                    delete healthRecords[EHRId].permissionedDoctors[i];
+                } */
+
+                return true;
+            }
         }
-    }
 
-    // Delete EHR details
-
-    function deleteEHRDetails(uint EHRID) public {
-        healthRecords[EHRID].fileLocation = "";
-        healthRecords[EHRID].byDoctorID = 0;
-        healthRecords[EHRID].count = 0;
-        delete healthRecords[EHRID].permissionedDoctors;
+        return false;
     }
 }
 
@@ -186,7 +225,7 @@ contract Consensus {
 
     // Get no of institutes
 
-    function getNoOfInstitutes() public view returns (uint) {
+    function getNoOfInstitutes() public view returns (uint256) {
         return noOfAlloted;
     }
 
@@ -216,7 +255,11 @@ contract Consensus {
         publicAddresses[id].lastModified = time;
     }
 
-    function getAllInstitutes(uint i) public view returns (instituteAddress memory) {
+    function getAllInstitutes(uint256 i)
+        public
+        view
+        returns (instituteAddress memory)
+    {
         return publicAddresses[i];
     }
 
@@ -231,11 +274,9 @@ contract Consensus {
 
     // Deactivate Institute
 
-    function deactivateInstitute(uint id) public {
+    function deactivateInstitute(uint256 id) public {
         publicAddresses[id].active = false;
     }
-
-    
 }
 
 
@@ -304,15 +345,15 @@ contract MedicalInstitute {
         view
         returns (string memory, string memory)
     {
-        if(Doctors[_ID].active) {
-        return (Doctors[_ID].name, Doctors[_ID].specialization);
+        if (Doctors[_ID].active) {
+            return (Doctors[_ID].name, Doctors[_ID].specialization);
         }
         return ("", "");
     }
 
     // Check if doctor is active
 
-    function checkValidityOfDoctor(uint ID) public view returns (bool) {
+    function checkValidityOfDoctor(uint256 ID) public view returns (bool) {
         return Doctors[ID].active;
     }
 
@@ -348,13 +389,13 @@ contract MedicalInstitute {
 
     // Revoke Doctor
 
-    function revokeDoctor(uint docID) public {
+    function revokeDoctor(uint256 docID) public {
         Doctors[docID].active = false;
     }
 
     // Revoke Medical Institute
 
-    function revokeMedicalInst() public  {
+    function revokeMedicalInst() public {
         active = false;
     }
 
@@ -366,9 +407,12 @@ contract MedicalInstitute {
 
     // Function to get ID of Doctor
 
-    function getIDOfDoctor(string memory name) public view returns (uint) {
-        for(uint i = 0;i < noOfDocs;i++) {
-            if(keccak256(abi.encodePacked((Doctors[i].name))) == keccak256(abi.encodePacked((name)))) {
+    function getIDOfDoctor(string memory name) public view returns (uint256) {
+        for (uint256 i = 0; i < noOfDocs; i++) {
+            if (
+                keccak256(abi.encodePacked((Doctors[i].name))) ==
+                keccak256(abi.encodePacked((name)))
+            ) {
                 return i;
             }
         }
