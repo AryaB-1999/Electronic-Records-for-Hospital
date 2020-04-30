@@ -131,12 +131,13 @@ contract Patient {
     function fetchDetailsOfEHR(uint256 ID)
         public
         view
-        returns (string memory, uint256, uint256)
+        returns (string memory, uint256, uint256, uint256[] memory)
     {
         return (
             healthRecords[ID].fileLocation,
             healthRecords[ID].byDoctorID,
-            healthRecords[ID].count
+            healthRecords[ID].count,
+            healthRecords[ID].permissionedDoctors
         );
     }
 
@@ -203,6 +204,12 @@ contract Patient {
         }
 
         return false;
+    }
+
+    // Remove EHR
+
+    function removeEHR(uint256 ID) public {
+        healthRecords[ID].fileLocation = "";
     }
 }
 

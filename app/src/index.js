@@ -322,12 +322,18 @@ const App = {
     patRecs.innerHTML = "<tr><td>ID#</td><td>Hash Value</td><td>Created by Doctor</td><td></td></tr>"
     for (; i >= 0; i--) {
       res = await p.methods.fetchDetailsOfEHR(i).call()
-      console.log("Result" + res)
-      console.log("Resultant record : " + res[3])
-      const manageButton = "<td><button id = IPFSManage" + i + " class='w3-button w3-light-grey' onclick='App.manageIPFSFile(" + i + ")'>Manage</button></td>"
-      // const deleteButton = "<td><button id = IPFSDel" + i + " class='w3-button w3-light-grey' onclick='App.deleteIPFSFile(" + i + ")'>Delete</button></td>"
-      const fetchButton = "<td><button id = IPFSPat" + i + " class='w3-button w3-light-grey' onclick='App.fetchIPFSFile(" + i + ")'>Fetch</button></td>"
-      patRecs.innerHTML += "<tr><td>" + i + "<td>" + res[0] + "</td><td>" + res[1] + "</td>" + fetchButton + manageButton  + "</tr>"
+      if(res[0] != "") {
+        console.log("Perm : " + res[3])
+        console.log("Result" + res)
+        console.log("Resultant record : " + res[3])
+        const manageButton = "<td><button id = IPFSManage" + i + " class='w3-button w3-light-grey' onclick='App.manageIPFSFile(" + i + ")'>Manage</button></td>"
+        const deleteButton = "<td><button id = IPFSDel" + i + " class='w3-button w3-light-grey' onclick='App.deleteIPFSFile(" + i + ")'>Delete</button></td>"
+        const fetchButton = "<td><button id = IPFSPat" + i + " class='w3-button w3-light-grey' onclick='App.fetchIPFSFile(" + i + ")'>Fetch</button></td>"
+        patRecs.innerHTML += "<tr><td>" + i + "<td>" + res[0] + "</td><td>" + res[1] + "</td>" +fetchButton + manageButton  + deleteButton +"</tr>"
+      }
+      else {
+        
+      }
     }
   },
 
@@ -338,29 +344,34 @@ const App = {
     console.log(await ipfsInstance.version())
     const p = new this.web3.eth.Contract(Patient.abi, this.loginAddress)
     let res = await p.methods.fetchDetailsOfEHR(arg).call()
-    // const file = await ipfsInstance.get(res[0])
-    // console.log(file)
-    var file1;
-    // for await (const file of ipfsInstance.get(res[0])) {
-    //   console.log(file.path)
-
-    //   const content = new BufferList()
-    //   for await (const chunk of file.content) {
-    //     content.append(chunk)
-    //   }
-    //   file1 += content.toString('base64')
-    //   // console.log(content.toString())
-    // }
-    // // console.log(file1)
-    // const file2 = new Blob([file1], {type:'pdf'})
-    // console.log(file2)
-    // FileSaver.saveAs(file2,"Sample.pdf")
-
-    var url = "http://ipfs.io/ipfs/" + res[0]
-    console.log(url)
-
-    document.getElementById('iframeEHR').src = "http://localhost:8080/ipfs/" + res[0]
-    document.getElementById('showEHR').style.display = 'block'
+    if(res[0] == "") {
+      alert("EHR is deleted or does not exist")
+    }
+    else {
+      // const file = await ipfsInstance.get(res[0])
+      // console.log(file)
+      var file1;
+      // for await (const file of ipfsInstance.get(res[0])) {
+      //   console.log(file.path)
+  
+      //   const content = new BufferList()
+      //   for await (const chunk of file.content) {
+      //     content.append(chunk)
+      //   }
+      //   file1 += content.toString('base64')
+      //   // console.log(content.toString())
+      // }
+      // // console.log(file1)
+      // const file2 = new Blob([file1], {type:'pdf'})
+      // console.log(file2)
+      // FileSaver.saveAs(file2,"Sample.pdf")
+  
+      var url = "http://ipfs.io/ipfs/" + res[0]
+      console.log(url)
+  
+      document.getElementById('iframeEHR').src = "http://localhost:8080/ipfs/" + res[0]
+      document.getElementById('showEHR').style.display = 'block'
+    }
   },
 
   requestEHR: async function () {
@@ -375,11 +386,16 @@ const App = {
     console.log(res)
     if (res) {
       let result = await p.methods.fetchDetailsOfEHR(EHRId).call()
-      var url = "http://ipfs.io/ipfs/" + result[0]
-      console.log(url)
-
-      document.getElementById('iframeEHR').src = "http://localhost:8080/ipfs/" + result[0]
-      document.getElementById('showEHR').style.display = 'block'
+      if(result[0] == "") {
+        alert("EHR does not exist or is deleted")
+        return;
+      } else {
+        var url = "http://ipfs.io/ipfs/" + result[0]
+        console.log(url)
+  
+        document.getElementById('iframeEHR').src = "http://localhost:8080/ipfs/" + result[0]
+        document.getElementById('showEHR').style.display = 'block'
+      }
     }
     else {
       // var client = new twilio('AC156faa4751108703f162eece68f2953a', '584a07eb4434e9af6849addf24b819c8')
@@ -412,7 +428,7 @@ const App = {
     const p = new this.web3.eth.Contract(Patient.abi, this.loginAddress)
     let res = await p.methods.fetchPermissionedDoctorOfEHR(arg).call()
     let perm = res[0];
-    console.log(res, perm, perm[1])
+    console.log("Permissions : " + perm)
     const table = document.getElementById('managePermTable')
 
     if (perm == 0) {
@@ -477,6 +493,16 @@ const App = {
       await this.medi.methods.revokeDoctor(i).send({from: this.account})
       this.fillMedDocs();
     }
+  },
+  deleteIPFSFile: async function(arg) {
+    console.log("In delete")
+    const p = new this.web3.eth.Contract(Patient.abi, this.loginAddress)
+    let res = await p.methods.fetchPermissionedDoctorOfEHR(arg).call()
+    var conf = confirm("Are you sure you want to delete this file, it cannot be recovered again?")
+    if(conf) {
+      await p.methods.removeEHR(arg).send({from: this.account})
+    }
+    this.fillPatRecs();
   }
 }
 
